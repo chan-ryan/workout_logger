@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 void main() => runApp(MaterialApp(
-  home: Home(),
-));
+      home: Home(),
+    ));
 
 class Home extends StatefulWidget {
   @override
@@ -14,14 +14,29 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: <Widget>[
-          Center(
-            child: Row(children: [
-              IconButton(icon: Icon(Icons.), onPressed: () {})
-            ],)
-          )
-        ],
-      )
+        backgroundColor: Colors.black87,
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.arrow_back_ios_rounded),
+              onPressed: () {},
+            ),
+            TextButton(
+              child: Text("Month Year",
+                  style: TextStyle(fontSize: 18.0, color: Colors.white)),
+              onPressed: () {},
+            ),
+            IconButton(
+              icon: Icon(Icons.arrow_forward_ios_rounded),
+              onPressed: () {},
+            )
+          ],
+        ),
+      ),
+      backgroundColor: Colors.white,
     );
   }
 }
