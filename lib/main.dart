@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() => runApp(MaterialApp(
       home: Home(),
@@ -14,7 +15,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black87,
+        backgroundColor: Colors.black,
         centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +37,8 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
+      body: Column(),
     );
   }
 }

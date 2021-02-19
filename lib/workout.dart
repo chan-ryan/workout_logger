@@ -4,4 +4,6 @@ class Workout {
   int startMinute;
   int endHour;
   int endMinute;
+
+  Workout({this.startHour, this.startMinute, this.endHour, this.endMinute});
 }
