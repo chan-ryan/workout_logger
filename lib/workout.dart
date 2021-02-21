@@ -1,9 +1,7 @@
 class Workout {
   String date;
-  int startHour;
-  int startMinute;
-  int endHour;
-  int endMinute;
+  String start;
+  String end;
 
-  Workout({this.startHour, this.startMinute, this.endHour, this.endMinute});
+  Workout({this.date, this.start, this.end});
 }
