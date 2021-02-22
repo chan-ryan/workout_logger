@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_logger/widgets/workout.dart';
 
 void main() => runApp(MaterialApp(
       home: Home(),
@@ -13,6 +14,49 @@ class _HomeState extends State<Home> {
   int index = 0;
 
   final pages = <Widget>[];
+
+  Workout workoutExample = Workout(
+    activity: Activity(
+        activity: "Basketball",
+        icon: Icon(Icons.sports_basketball_rounded, size: 50.0)),
+    date: 'February 21, 2021',
+    start: '6:15',
+    end: '7:00',
+  );
+
+  Widget workoutCard(Workout workout) {
+    return Card(
+        margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+        color: Colors.grey[850],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              workout.activity.icon,
+              SizedBox(width: 8.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(workout.date, style: TextStyle(fontSize: 16.0)),
+                  SizedBox(width: 8.0),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(workout.activity.activity,
+                          style: TextStyle(fontSize: 20.0)),
+                      SizedBox(width: 8.0),
+                      Text(workout.start + ' - ' + workout.end,
+                          style: TextStyle(fontSize: 16.0))
+                    ],
+                  ),
+                  //Text(workout.note)
+                ],
+              )
+            ],
+          ),
+        ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +86,9 @@ class _HomeState extends State<Home> {
           ),
         ),
         backgroundColor: Colors.black,
-        body: Column(),
+        body: Column(
+          children: [workoutCard(workoutExample)],
+        ),
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.blueAccent,
           backgroundColor: Colors.white,
@@ -67,7 +113,14 @@ class _HomeState extends State<Home> {
                     });
                   },
                 ),
-                placeholder,
+                Opacity(
+                  //placeholder
+                  opacity: 0,
+                  child: IconButton(
+                    icon: Icon(Icons.place),
+                    onPressed: () {},
+                  ),
+                ),
                 IconButton(
                   //calendar view
                   icon: Icon(Icons.calendar_today_rounded),
@@ -82,11 +135,3 @@ class _HomeState extends State<Home> {
             )));
   }
 }
-
-Widget placeholder = Opacity(
-  opacity: 0,
-  child: IconButton(
-    icon: Icon(Icons.place),
-    onPressed: () {},
-  ),
-);
