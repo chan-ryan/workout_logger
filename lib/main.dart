@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_logger/widgets/navbar.dart';
 import 'package:workout_logger/widgets/workout.dart';
 
 void main() => runApp(MaterialApp(
@@ -18,7 +19,8 @@ class _HomeState extends State<Home> {
   Workout workoutExample = Workout(
     activity: Activity(
         activity: "Basketball",
-        icon: Icon(Icons.sports_basketball_rounded, size: 50.0)),
+        iconData: Icons.sports_basketball_rounded,
+        color: Colors.orange),
     date: 'February 21, 2021',
     start: '6:15',
     end: '7:00',
@@ -38,16 +40,20 @@ class _HomeState extends State<Home> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(workout.date, style: TextStyle(fontSize: 16.0)),
+                  Text(workout.date,
+                      style:
+                          TextStyle(fontSize: 16.0, color: Colors.grey[350])),
                   SizedBox(width: 8.0),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(workout.activity.activity,
-                          style: TextStyle(fontSize: 20.0)),
+                          style: TextStyle(
+                              fontSize: 20.0, color: workout.activity.color)),
                       SizedBox(width: 8.0),
                       Text(workout.start + ' - ' + workout.end,
-                          style: TextStyle(fontSize: 16.0))
+                          style: TextStyle(
+                              fontSize: 16.0, color: Colors.grey[350]))
                     ],
                   ),
                   //Text(workout.note)
@@ -56,6 +62,12 @@ class _HomeState extends State<Home> {
             ],
           ),
         ));
+  }
+
+  void onChangedTab(int index) {
+    setState(() {
+      this.index = index;
+    });
   }
 
   @override
@@ -96,42 +108,9 @@ class _HomeState extends State<Home> {
           onPressed: () {},
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: BottomAppBar(
-            shape: CircularNotchedRectangle(),
-            notchMargin: 8.0,
-            color: Colors.blueAccent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                  //list view (default)
-                  icon: Icon(Icons.table_rows_rounded),
-                  color: index == 0 ? Colors.white : Colors.grey[400],
-                  onPressed: () {
-                    setState(() {
-                      index = 0;
-                    });
-                  },
-                ),
-                Opacity(
-                  //placeholder
-                  opacity: 0,
-                  child: IconButton(
-                    icon: Icon(Icons.place),
-                    onPressed: () {},
-                  ),
-                ),
-                IconButton(
-                  //calendar view
-                  icon: Icon(Icons.calendar_today_rounded),
-                  color: index == 1 ? Colors.white : Colors.grey[400],
-                  onPressed: () {
-                    setState(() {
-                      index = 1;
-                    });
-                  },
-                )
-              ],
-            )));
+        bottomNavigationBar: NavBar(
+          index: index,
+          onChangedTab: onChangedTab,
+        ));
   }
 }

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-class TabBarMaterialWidget extends StatefulWidget {
+class NavBar extends StatefulWidget {
   final int index;
   final ValueChanged<int> onChangedTab;
 
-  const TabBarMaterialWidget({this.index, this.onChangedTab, Key key})
-      : super(key: key);
+  const NavBar({this.index, this.onChangedTab, Key key}) : super(key: key);
 
   @override
-  _TabBarMaterialWidgetState createState() => _TabBarMaterialWidgetState();
+  _NavBarState createState() => _NavBarState();
 }
 
-class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
+class _NavBarState extends State<NavBar> {
   Widget placeholder = Opacity(
     opacity: 0,
     child: IconButton(
@@ -35,9 +34,14 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
           ],
         ));
   }
-}
 
-Widget buildTabItem({int index, Icon icon}) {
-  return IconTheme(
-      data: IconThemeData(), child: IconButton(icon: icon, onPressed: () {}));
+  Widget buildTabItem({int index, Icon icon}) {
+    final isSelected = index == widget.index;
+    return IconTheme(
+        data: IconThemeData(
+          color: isSelected ? Colors.white : Colors.grey[400],
+        ),
+        child: IconButton(
+            icon: icon, onPressed: () => widget.onChangedTab(index)));
+  }
 }
