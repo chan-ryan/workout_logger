@@ -16,7 +16,7 @@ class Workout {
   String date;
   String start;
   String end;
-  String note;
+  String description;
 
-  Workout({this.activity, this.date, this.start, this.end, this.note});
+  Workout({this.activity, this.date, this.start, this.end, this.description});
 }
