@@ -14,7 +14,7 @@ class CardView extends StatefulWidget {
 class _CardViewState extends State<CardView> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: widget.workouts
           .map((workout) => WorkoutCard(workout: workout))
           .toList(),

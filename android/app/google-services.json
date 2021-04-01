@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "620524675328",
+    "project_id": "workout-logger-8bf83",
+    "storage_bucket": "workout-logger-8bf83.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620524675328:android:6853e95dfcd7b1714ad3e5",
+        "android_client_info": {
+          "package_name": "com.ryanchan.workout_logger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "620524675328-c17tfbuplrq3mumg68hokb52lqvd5ta8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsalbuxZBP6R1JEkta_4p1VHVWntRTbFc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "620524675328-c17tfbuplrq3mumg68hokb52lqvd5ta8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
