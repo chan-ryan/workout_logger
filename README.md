@@ -1,6 +1,6 @@
 # workout_logger
 
-A new Flutter project.
+A mobile app for iOS and Android to log workouts and other physical activities, such as sports.
 
 ## Getting Started
 
