@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workout_logger/services/auth.dart';
 import 'package:workout_logger/widgets/navbar.dart';
 import 'package:workout_logger/widgets/workout.dart';
 import 'package:workout_logger/pages/card_view.dart';
@@ -20,6 +21,8 @@ Workout workoutExample = Workout(
 );
 
 class _HomeState extends State<Home> {
+  final AuthService _auth = AuthService();
+
   int index = 0;
 
   final pages = <Widget>[
@@ -39,6 +42,7 @@ class _HomeState extends State<Home> {
           iconTheme: IconThemeData(color: Colors.white),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               IconButton(
@@ -56,6 +60,13 @@ class _HomeState extends State<Home> {
               )
             ],
           ),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () async {
+                  await _auth.signOut();
+                })
+          ],
         ),
         backgroundColor: Colors.black,
         body: CardView(workouts: [

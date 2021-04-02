@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:workout_logger/services/auth.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
 
   String email = '';
@@ -19,7 +19,7 @@ class _SignInState extends State<SignIn> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: Text('Sign in to workout logger'),
+          title: Text('Register to workout logger'),
         ),
         body: Container(
             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
@@ -43,22 +43,10 @@ class _SignInState extends State<SignIn> {
                     print(email);
                     print(password);
                   },
-                  child: Text('Sign in', style: TextStyle(color: Colors.white)),
+                  child:
+                      Text('Register', style: TextStyle(color: Colors.white)),
                 ),
               ],
             )));
   }
 }
-
-/*ElevatedButton(
-              child: Text('Sign in anonymously'),
-              onPressed: () async {
-                dynamic result = await _auth.signInAnon();
-                if (result == null) {
-                  print('Error signing in');
-                } else {
-                  print('Signed in');
-                  print(result.uid);
-                }
-              },
-            )*/
