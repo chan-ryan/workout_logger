@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:workout_logger/services/auth.dart';
 
 class SignIn extends StatefulWidget {
+  final Function toggleView;
+
+  SignIn({this.toggleView});
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -15,14 +19,14 @@ class _SignInState extends State<SignIn> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.blueGrey[600],
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          title: Text('Sign in to workout logger'),
+          title: Text('Sign In'),
         ),
         body: Container(
-            padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 50.0),
+            padding: EdgeInsets.fromLTRB(50.0, 15.0, 50.0, 0.0),
             child: Column(
               children: [
                 TextFormField(
@@ -30,14 +34,21 @@ class _SignInState extends State<SignIn> {
                     setState(() => email = val);
                   },
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 15.0),
                 TextFormField(
                   obscureText: true,
                   onChanged: (val) {
                     setState(() => password = val);
                   },
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
+                TextButton(
+                    onPressed: () {
+                      widget.toggleView();
+                    },
+                    child: Text("Don't have an account? Sign up",
+                        style:
+                            TextStyle(decoration: TextDecoration.underline))),
                 ElevatedButton(
                   onPressed: () async {
                     print(email);
