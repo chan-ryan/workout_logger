@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:workout_logger/models/user.dart';
 import 'package:workout_logger/services/database.dart';
+import 'package:workout_logger/shared/constants.dart';
+import 'package:workout_logger/widgets/workout.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -45,8 +47,8 @@ class AuthService {
       FirebaseUser user = result.user;
 
       //create new document for user with uid
-      await DatabaseService(uid: user.uid)
-          .updateUserData('New User', new Map(), new Map());
+      await DatabaseService(uid: user.uid).updateUserData(
+          'New User', new Map<String, List<Workout>>(), stockActivities);
 
       return _userFromFirebase(user);
     } catch (e) {

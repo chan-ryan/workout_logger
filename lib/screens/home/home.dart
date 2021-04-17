@@ -3,6 +3,9 @@ import 'package:workout_logger/services/auth.dart';
 import 'package:workout_logger/widgets/navbar.dart';
 import 'package:workout_logger/widgets/workout.dart';
 import 'package:workout_logger/pages/card_view.dart';
+import 'package:workout_logger/services/database.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -35,62 +38,67 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
+    return StreamProvider<QuerySnapshot>.value(
+      value: DatabaseService().workouts,
+      initialData: null,
+      child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            centerTitle: true,
+            iconTheme: IconThemeData(color: Colors.white),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.arrow_back_ios_rounded),
+                  onPressed: () {},
+                ),
+                TextButton(
+                  child: Text("Month Year",
+                      style: TextStyle(fontSize: 18.0, color: Colors.white)),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.arrow_forward_ios_rounded),
+                  onPressed: () {},
+                )
+              ],
+            ),
+            actions: [
               IconButton(
-                icon: Icon(Icons.arrow_back_ios_rounded),
-                onPressed: () {},
-              ),
-              TextButton(
-                child: Text("Month Year",
-                    style: TextStyle(fontSize: 18.0, color: Colors.white)),
-                onPressed: () {},
-              ),
-              IconButton(
-                icon: Icon(Icons.arrow_forward_ios_rounded),
-                onPressed: () {},
-              )
+                  icon: Icon(Icons.settings),
+                  onPressed: () async {
+                    await _auth.signOut();
+                  })
             ],
           ),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.settings),
-                onPressed: () async {
-                  await _auth.signOut();
-                })
-          ],
-        ),
-        backgroundColor: Colors.black,
-        body: CardView(workouts: [
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-        ]),
-        floatingActionButton: FloatingActionButton(
-          foregroundColor: Colors.blueAccent,
-          backgroundColor: Colors.white,
-          child: Icon(Icons.add_rounded),
-          onPressed: () {},
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: NavBar(
-          index: index,
-          onChangedTab: onChangedTab,
-        ));
+          backgroundColor: Colors.black,
+          body: CardView(workouts: [
+            workoutExample,
+            workoutExample,
+            workoutExample,
+            workoutExample,
+            workoutExample,
+            workoutExample,
+            workoutExample,
+            workoutExample,
+            workoutExample,
+          ]),
+          floatingActionButton: FloatingActionButton(
+            foregroundColor: Colors.blueAccent,
+            backgroundColor: Colors.white,
+            child: Icon(Icons.add_rounded),
+            onPressed: () {},
+          ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: NavBar(
+            index: index,
+            onChangedTab: onChangedTab,
+          )),
+    );
   }
 
   void onChangedTab(int index) {
