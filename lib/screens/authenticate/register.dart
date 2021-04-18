@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:workout_logger/services/auth.dart';
 import 'package:workout_logger/shared/constants.dart';
 import 'package:workout_logger/shared/loading.dart';
+import 'package:workout_logger/services/database.dart';
+import 'package:workout_logger/widgets/workout.dart';
 
 class Register extends StatefulWidget {
   final Function toggleView;

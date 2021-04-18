@@ -7,19 +7,19 @@ import 'package:workout_logger/widgets/workout.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  User _userFromFirebase(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
+  WorkoutUser _userFromFirebase(User user) {
+    return user != null ? WorkoutUser(uid: user.uid) : null;
   }
 
-  Stream<User> get user {
-    return _auth.onAuthStateChanged.map(_userFromFirebase);
+  Stream<WorkoutUser> get user {
+    return _auth.authStateChanges().map(_userFromFirebase);
   }
 
-  //sign in anon
+  //sign in anon (not used)
   Future signInAnon() async {
     try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.signInAnonymously();
+      User user = result.user;
       return _userFromFirebase(user);
     } catch (e) {
       return null;
@@ -29,9 +29,9 @@ class AuthService {
   //sign in with email and pword
   Future signInWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
+      UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser user = result.user;
+      User user = result.user;
       return _userFromFirebase(user);
     } catch (e) {
       print(e.toString());
@@ -42,13 +42,13 @@ class AuthService {
   //register with email and pword
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser user = result.user;
+      User user = result.user;
 
       //create new document for user with uid
-      await DatabaseService(uid: user.uid).updateUserData(
-          'New User', new Map<String, List<Workout>>(), stockActivities);
+      await DatabaseService(uid: user.uid)
+          .updateUserData(new Map<String, List<Workout>>(), stockActivities);
 
       return _userFromFirebase(user);
     } catch (e) {

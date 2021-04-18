@@ -4,6 +4,7 @@ import 'package:workout_logger/widgets/navbar.dart';
 import 'package:workout_logger/widgets/workout.dart';
 import 'package:workout_logger/pages/card_view.dart';
 import 'package:workout_logger/services/database.dart';
+import 'package:workout_logger/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -38,8 +39,10 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<QuerySnapshot>.value(
-      value: DatabaseService().workouts,
+    final user = Provider.of<WorkoutUser>(context);
+
+    return StreamProvider<UserData>.value(
+      value: DatabaseService(uid: user.uid).userData,
       initialData: null,
       child: Scaffold(
           appBar: AppBar(
