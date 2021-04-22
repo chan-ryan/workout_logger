@@ -41,8 +41,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     final user = Provider.of<WorkoutUser>(context);
 
-    return StreamProvider<UserData>.value(
-      value: DatabaseService(uid: user.uid).userData,
+    return StreamProvider<Map<String, List<Workout>>>.value(
+      value: DatabaseService(uid: user.uid).userDoc,
       initialData: null,
       child: Scaffold(
           appBar: AppBar(

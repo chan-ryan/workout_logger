@@ -48,7 +48,7 @@ class AuthService {
 
       //create new document for user with uid
       await DatabaseService(uid: user.uid)
-          .updateUserData(new Map<String, List<Workout>>(), stockActivities);
+          .updateUserData(new Map<String, List<Workout>>(), []);
 
       return _userFromFirebase(user);
     } catch (e) {

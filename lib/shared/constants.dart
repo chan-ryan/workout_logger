@@ -9,40 +9,40 @@ InputDecoration textInputDecoration = InputDecoration(
       borderRadius: BorderRadius.circular(10.0)),
 );
 
-List<Activity> stockActivities = [
-  Activity(
+Map<String, Activity> activities = {
+  "Basketball": Activity(
     activity: "Basketball",
     iconData: Icons.sports_basketball_rounded,
     color: Colors.orange,
   ),
-  Activity(
+  "Baseball": Activity(
     activity: "Baseball",
     iconData: Icons.sports_baseball_rounded,
     color: Colors.grey[300],
   ),
-  Activity(
+  "Soccer": Activity(
     activity: "Soccer",
     iconData: Icons.sports_soccer_rounded,
     color: Colors.white,
   ),
-  Activity(
+  "Football": Activity(
     activity: "Football",
     iconData: Icons.sports_football_rounded,
     color: Colors.orange[900],
   ),
-  Activity(
+  "Running": Activity(
     activity: "Running",
     iconData: Icons.run_circle_outlined,
     color: Colors.green,
   ),
-  Activity(
+  "Swimming": Activity(
     activity: "Swimming",
     iconData: null,
     color: Colors.blue,
   ),
-  Activity(
+  "Weights": Activity(
     activity: "Weights",
     iconData: null,
     color: Colors.red,
   ),
-];
+};
