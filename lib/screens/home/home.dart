@@ -42,7 +42,7 @@ class _HomeState extends State<Home> {
     final user = Provider.of<WorkoutUser>(context);
 
     return StreamProvider<Map<String, List<Workout>>>.value(
-      value: DatabaseService(uid: user.uid).userDoc,
+      value: DatabaseService(uid: user.uid).userWorkoutMap,
       initialData: null,
       child: Scaffold(
           appBar: AppBar(
