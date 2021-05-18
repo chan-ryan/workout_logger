@@ -29,17 +29,16 @@ class _HomeState extends State<Home> {
 
   int index = 0;
 
-  final pages = <Widget>[
-    CardView(workouts: [
-      workoutExample,
-      workoutExample,
-      workoutExample,
-    ])
-  ];
+  final pages = <Widget>[];
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<WorkoutUser>(context);
+    Map<String, List<Workout>> workouts =
+        Provider.of<Map<String, List<Workout>>>(context);
+    List<String> months = Provider.of<List<String>>(context);
+
+    String currentMonth;
 
     return StreamProvider<Map<String, List<Workout>>>.value(
       value: DatabaseService(uid: user.uid).userWorkoutMap,
