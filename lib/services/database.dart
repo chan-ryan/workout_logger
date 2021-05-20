@@ -82,7 +82,8 @@ class DatabaseService {
     return snapshot.docs.map((doc) {
       return Workout(
         activity: doc.data()['activity'],
-        date: doc.data()['date'],
+        //start: (doc.data()['start']).toDate(),
+        //end: (doc.data()['end']).toDate(),
       );
     }).toList();
   }

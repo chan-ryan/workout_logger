@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:workout_logger/widgets/workout.dart';
+import 'package:workout_logger/shared/constants.dart';
+import 'package:intl/intl.dart';
 
 class WorkoutCard extends StatefulWidget {
   final Workout workout;
@@ -13,6 +15,11 @@ class WorkoutCard extends StatefulWidget {
 class _WorkoutCardState extends State<WorkoutCard> {
   @override
   Widget build(BuildContext context) {
+    String date = DateFormat.MMMMEEEEd().format(widget.workout.start);
+    String startToEnd = DateFormat.jm().format(widget.workout.start) +
+        " - " +
+        DateFormat.jm().format(widget.workout.end);
+
     return Card(
         margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
         color: Colors.grey[850],
@@ -28,7 +35,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.workout.date,
+                  Text(date,
                       style:
                           TextStyle(fontSize: 16.0, color: Colors.grey[350])),
                   SizedBox(width: 8.0),
@@ -40,7 +47,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
                               fontSize: 20.0,
                               color: widget.workout.activity.color)),
                       SizedBox(width: 8.0),
-                      Text(widget.workout.start + ' - ' + widget.workout.end,
+                      Text(startToEnd,
                           style: TextStyle(
                               fontSize: 16.0, color: Colors.grey[350]))
                     ],

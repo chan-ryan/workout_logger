@@ -13,10 +13,9 @@ class Activity {
 
 class Workout {
   Activity activity;
-  String date;
-  String start;
-  String end;
+  DateTime start;
+  DateTime end;
   String description;
 
-  Workout({this.activity, this.date, this.start, this.end, this.description});
+  Workout({this.activity, this.start, this.end, this.description});
 }
