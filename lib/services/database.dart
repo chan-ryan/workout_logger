@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workout_logger/models/user.dart';
 import 'package:workout_logger/shared/constants.dart';
 import 'package:workout_logger/widgets/workout.dart';
+import 'package:intl/intl.dart';
 
 class DatabaseService {
   final String uid;
@@ -12,34 +13,18 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('users');
 
   void createNewUser() {
+    DateTime currTime = DateTime.now();
+    String currMonthAndYear = DateFormat.yMMM().format(currTime);
     // create user document and add 'months' field, a list of subcollections
     usersCollection.doc(uid).set({
-      'months': ['042021']
+      'months': [currMonthAndYear]
     });
     // create subcollection for current month and add a dummy doc/workout
     usersCollection
         .doc(uid)
-        .collection('042021')
+        .collection(currMonthAndYear)
         .doc('dummy')
         .set({'activity': 'dummy'});
-  }
-
-  void updateUserData(
-      Map<String, List<Workout>> workouts, List<Activity> activities) async {
-    usersCollection
-        .doc(uid)
-        .collection('042021')
-        .doc('dummy')
-        .set({'activity': 'dummy'});
-  }
-
-  //userData from snapshot
-  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    return UserData(
-      uid: uid,
-      workouts: snapshot.data()['workouts'],
-      activities: snapshot.data()['activites'],
-    );
   }
 
   // get map of workouts stream
@@ -54,11 +39,6 @@ class DatabaseService {
         .map((DocumentSnapshot snapshot) {
       return snapshot.data()['months'];
     });
-  }
-
-  // get user doc stream
-  Stream<UserData> get userData {
-    return usersCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
   }
 
   // return a map (month : list of workouts) from a user doc
@@ -82,9 +62,23 @@ class DatabaseService {
     return snapshot.docs.map((doc) {
       return Workout(
         activity: doc.data()['activity'],
-        //start: (doc.data()['start']).toDate(),
-        //end: (doc.data()['end']).toDate(),
+        start: (doc.data()['start']).toDate(),
+        end: (doc.data()['end']).toDate(),
       );
     }).toList();
+  }
+
+  void addNewWorkout(Workout workout) {
+    String monthAndYear = DateFormat.yMMM().format(workout.start);
+    usersCollection
+        .doc(uid)
+        .collection(monthAndYear)
+        .doc(workout.start.toString())
+        .set({
+      'activity': workout.activity,
+      'start': workout.start,
+      'end': workout.end,
+      'description': workout.description
+    });
   }
 }

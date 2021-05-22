@@ -12,7 +12,7 @@ class Activity {
 }
 
 class Workout {
-  Activity activity;
+  String activity;
   DateTime start;
   DateTime end;
   String description;

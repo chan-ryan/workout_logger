@@ -15,9 +15,9 @@ class Home extends StatefulWidget {
 }
 
 Workout workoutExample = Workout(
-  activity: activities["Basketball"],
-  start: DateTime(2021, 5, 20, 6, 15),
-  end: DateTime(2021, 5, 20, 8),
+  activity: "Basketball",
+  start: DateTime(2021, 4, 20, 6, 15),
+  end: DateTime(2021, 4, 20, 8),
   /*description: 'leg day'*/
 );
 

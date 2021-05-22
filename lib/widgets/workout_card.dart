@@ -15,6 +15,7 @@ class WorkoutCard extends StatefulWidget {
 class _WorkoutCardState extends State<WorkoutCard> {
   @override
   Widget build(BuildContext context) {
+    Activity activity = activities[widget.workout.activity];
     String date = DateFormat.MMMMEEEEd().format(widget.workout.start);
     String startToEnd = DateFormat.jm().format(widget.workout.start) +
         " - " +
@@ -30,7 +31,7 @@ class _WorkoutCardState extends State<WorkoutCard> {
             children: [
               Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [widget.workout.activity.icon]),
+                  children: [activity.icon]),
               SizedBox(width: 8.0),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,10 +43,9 @@ class _WorkoutCardState extends State<WorkoutCard> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(widget.workout.activity.activity,
-                          style: TextStyle(
-                              fontSize: 20.0,
-                              color: widget.workout.activity.color)),
+                      Text(activity.activity,
+                          style:
+                              TextStyle(fontSize: 20.0, color: activity.color)),
                       SizedBox(width: 8.0),
                       Text(startToEnd,
                           style: TextStyle(
