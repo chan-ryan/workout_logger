@@ -61,24 +61,56 @@ class DatabaseService {
   List<Workout> workoutListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Workout(
-        activity: doc.data()['activity'],
-        start: (doc.data()['start']).toDate(),
-        end: (doc.data()['end']).toDate(),
-      );
+          activity: doc.data()['activity'],
+          start: (doc.data()['start']).toDate(),
+          end: (doc.data()['end']).toDate(),
+          description: doc.data()['description']);
     }).toList();
   }
 
-  void addNewWorkout(Workout workout) {
+  void addNewWorkout(List<String> months, Workout workout) {
+    updateMonths(workout.start);
     String monthAndYear = DateFormat.yMMM().format(workout.start);
     usersCollection
         .doc(uid)
         .collection(monthAndYear)
         .doc(workout.start.toString())
         .set({
+      'date': DateFormat.yMd().format(workout.start),
       'activity': workout.activity,
       'start': workout.start,
       'end': workout.end,
       'description': workout.description
     });
+  }
+
+  // update months list up to the given DateTime
+  void updateMonths(DateTime time) async {
+    List<String> months =
+        await usersCollection.doc(uid).get().then((DocumentSnapshot snapshot) {
+      return snapshot.data()['months'];
+    });
+    List<String> newMonths = [];
+    DateTime currTime = time;
+    while (!months.contains(DateFormat.yMMM().format(currTime))) {
+      newMonths.insert(0, DateFormat.yMMM().format(currTime));
+      if (currTime.month == 1) {
+        currTime = DateTime(currTime.year - 1, 12);
+      } else {
+        currTime = DateTime(currTime.year, currTime.month - 1);
+      }
+    }
+
+    //update months list
+    usersCollection.doc(uid).set({'months': months + newMonths});
+
+    //create new subcollections for added months
+    for (String monthAndYear in newMonths) {
+      usersCollection
+          .doc(uid)
+          .collection(monthAndYear)
+          .doc('dummy')
+          .set({'activity': 'dummy'});
+    }
   }
 }
