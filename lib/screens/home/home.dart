@@ -8,6 +8,7 @@ import 'package:workout_logger/models/user.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:workout_logger/shared/constants.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -31,11 +32,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<WorkoutUser>(context);
-    Map<String, List<Workout>> workouts =
-        Provider.of<Map<String, List<Workout>>>(context);
-    List<String> months = Provider.of<List<String>>(context);
+    final months = Provider.of<List<String>>(context);
+    final workouts = Provider.of<Map<String, List<Workout>>>(context);
 
-    //int monthIndex = months.length - 1;
+    print('month list: ' + months.toString());
+
+    int monthIndex = months.indexOf(DateFormat.yMMM().format(DateTime.now()));
+    DateTime time = DateTime.now();
 
     return Scaffold(
         appBar: AppBar(
@@ -64,7 +67,7 @@ class _HomeState extends State<Home> {
           ),
           actions: [
             IconButton(
-                icon: Icon(Icons.settings),
+                icon: Icon(Icons.exit_to_app_rounded),
                 onPressed: () async {
                   await _auth.signOut();
                 })
@@ -99,5 +102,21 @@ class _HomeState extends State<Home> {
     setState(() {
       this.index = index;
     });
+  }
+
+  DateTime nextMonth(DateTime time) {
+    if (time.month == 12) {
+      return DateTime(time.year + 1, 1);
+    } else {
+      return DateTime(time.year, time.month + 1);
+    }
+  }
+
+  DateTime prevMonth(DateTime time) {
+    if (time.month == 1) {
+      return DateTime(time.year - 1, 12);
+    } else {
+      return DateTime(time.year, time.month - 1);
+    }
   }
 }

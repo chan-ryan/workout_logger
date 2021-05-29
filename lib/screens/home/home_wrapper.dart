@@ -9,16 +9,18 @@ class HomeWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<WorkoutUser>(context);
-    final userData = DatabaseService(uid: user.uid);
+    final userData = DatabaseService(user.uid);
 
     return MultiProvider(
       providers: [
         StreamProvider<Map<String, List<Workout>>>.value(
-            value: userData.userWorkoutMap, initialData: null),
+            value: DatabaseService(user.uid).userWorkoutMap,
+            initialData: <String, List<Workout>>{}),
         StreamProvider<List<String>>.value(
-            value: userData.userMonths, initialData: null)
+            value: DatabaseService(user.uid).userMonths,
+            initialData: <String>[])
       ],
-      child: Home(),
+      child: MaterialApp(home: Home()),
     );
   }
 }

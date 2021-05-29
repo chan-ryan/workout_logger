@@ -14,10 +14,17 @@ class CardView extends StatefulWidget {
 class _CardViewState extends State<CardView> {
   @override
   Widget build(BuildContext context) {
-    List<Workout> sorted = widget.workouts;
-    sorted.sort();
-    return ListView(
-      children: sorted.map((workout) => WorkoutCard(workout: workout)).toList(),
-    );
+    if (widget.workouts.isEmpty) {
+      return Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+          child: Text("Nothing yet"));
+    } else {
+      widget.workouts.sort();
+      return ListView(
+        children: widget.workouts
+            .map((workout) => WorkoutCard(workout: workout))
+            .toList(),
+      );
+    }
   }
 }
