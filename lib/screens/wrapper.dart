@@ -17,7 +17,7 @@ class Wrapper extends StatelessWidget {
         ? Authenticate()
         : StreamProvider<Map<String, List<Workout>>>.value(
             value: DatabaseService(user.uid).userWorkouts,
-            initialData: null,
+            initialData: {},
             child: Home());
   }
 }

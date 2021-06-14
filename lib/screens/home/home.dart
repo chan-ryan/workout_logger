@@ -11,6 +11,10 @@ import 'package:workout_logger/shared/constants.dart';
 import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
+  final DateTime month;
+
+  Home({this.month});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -27,18 +31,14 @@ class _HomeState extends State<Home> {
 
   int index = 0;
 
-  final pages = <Widget>[];
+  DateTime month = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<WorkoutUser>(context);
-    final months = Provider.of<List<String>>(context);
     final workouts = Provider.of<Map<String, List<Workout>>>(context);
-
-    print('month list: ' + months.toString());
-
-    int monthIndex = months.indexOf(DateFormat.yMMM().format(DateTime.now()));
-    DateTime time = DateTime.now();
+    print("MAP HERE");
+    print(workouts);
 
     return Scaffold(
         appBar: AppBar(
@@ -52,16 +52,30 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.arrow_back_ios_rounded),
-                onPressed: () {},
+                onPressed: () {
+                  if (workouts.containsKey(
+                      DateFormat.yMMM().format(prevMonth(month)))) {
+                    setState(() {
+                      month = prevMonth(month);
+                    });
+                  }
+                },
               ),
               TextButton(
-                child: Text("Month Year",
+                child: Text(DateFormat.yMMM().format(month),
                     style: TextStyle(fontSize: 18.0, color: Colors.white)),
                 onPressed: () {},
               ),
               IconButton(
                 icon: Icon(Icons.arrow_forward_ios_rounded),
-                onPressed: () {},
+                onPressed: () {
+                  if (workouts.containsKey(
+                      DateFormat.yMMM().format(nextMonth(month)))) {
+                    setState(() {
+                      month = nextMonth(month);
+                    });
+                  }
+                },
               )
             ],
           ),
