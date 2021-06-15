@@ -15,9 +15,11 @@ class _CardViewState extends State<CardView> {
   @override
   Widget build(BuildContext context) {
     if (widget.workouts.isEmpty) {
-      return Padding(
-          padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
-          child: Text("Nothing yet"));
+      return Center(
+        child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+            child: Text("Nothing yet this month", style: TextStyle(color: Colors.grey[400], fontSize: 20.0))),
+      );
     } else {
       widget.workouts.sort();
       return ListView(

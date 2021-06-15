@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:workout_logger/services/auth.dart';
+import 'package:workout_logger/shared/loading.dart';
 import 'package:workout_logger/widgets/navbar.dart';
 import 'package:workout_logger/widgets/workout.dart';
 import 'package:workout_logger/pages/card_view.dart';
@@ -36,13 +37,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<WorkoutUser>(context);
-    final workouts = Provider.of<Map<String, List<Workout>>>(context);
+    final userWorkouts = Provider.of<Map<String, List<Workout>>>(context);
     print("MAP HERE");
-    print(workouts);
+    print(userWorkouts);
 
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.black,
+          brightness: Brightness.dark,
           centerTitle: true,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -53,7 +55,7 @@ class _HomeState extends State<Home> {
                 icon: Icon(Icons.arrow_back_ios_rounded),
                 color: Colors.white,
                 disabledColor: Colors.grey[600],
-                onPressed: !workouts.containsKey(
+                onPressed: !userWorkouts.containsKey(
                       DateFormat.yMMM().format(prevMonth(month))) ? null : () {
                         setState(() {month = prevMonth(month);});
                       },
@@ -67,7 +69,7 @@ class _HomeState extends State<Home> {
                 icon: Icon(Icons.arrow_forward_ios_rounded),
                 color: Colors.white,
                 disabledColor: Colors.grey[600],
-                onPressed: !workouts.containsKey(
+                onPressed: !userWorkouts.containsKey(
                       DateFormat.yMMM().format(nextMonth(month))) ? null : () {
                         setState(() {month = nextMonth(month);});
                       },
@@ -83,7 +85,7 @@ class _HomeState extends State<Home> {
           ],
         ),
         backgroundColor: Colors.black,
-        body: CardView(workouts: workouts[DateFormat.yMMM().format(month)]),
+        body: userWorkouts[DateFormat.yMMM().format(month)] == null ? Loading() : CardView(workouts: userWorkouts[DateFormat.yMMM().format(month)]),
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.blueAccent,
           backgroundColor: Colors.white,
