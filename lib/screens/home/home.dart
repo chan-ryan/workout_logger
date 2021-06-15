@@ -44,7 +44,6 @@ class _HomeState extends State<Home> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
@@ -52,14 +51,12 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.arrow_back_ios_rounded),
-                onPressed: () {
-                  if (workouts.containsKey(
-                      DateFormat.yMMM().format(prevMonth(month)))) {
-                    setState(() {
-                      month = prevMonth(month);
-                    });
-                  }
-                },
+                color: Colors.white,
+                disabledColor: Colors.grey[600],
+                onPressed: !workouts.containsKey(
+                      DateFormat.yMMM().format(prevMonth(month))) ? null : () {
+                        setState(() {month = prevMonth(month);});
+                      },
               ),
               TextButton(
                 child: Text(DateFormat.yMMM().format(month),
@@ -68,14 +65,12 @@ class _HomeState extends State<Home> {
               ),
               IconButton(
                 icon: Icon(Icons.arrow_forward_ios_rounded),
-                onPressed: () {
-                  if (workouts.containsKey(
-                      DateFormat.yMMM().format(nextMonth(month)))) {
-                    setState(() {
-                      month = nextMonth(month);
-                    });
-                  }
-                },
+                color: Colors.white,
+                disabledColor: Colors.grey[600],
+                onPressed: !workouts.containsKey(
+                      DateFormat.yMMM().format(nextMonth(month))) ? null : () {
+                        setState(() {month = nextMonth(month);});
+                      },
               )
             ],
           ),
@@ -88,17 +83,7 @@ class _HomeState extends State<Home> {
           ],
         ),
         backgroundColor: Colors.black,
-        body: CardView(workouts: [
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-          workoutExample,
-        ]),
+        body: CardView(workouts: workouts[DateFormat.yMMM().format(month)]),
         floatingActionButton: FloatingActionButton(
           foregroundColor: Colors.blueAccent,
           backgroundColor: Colors.white,

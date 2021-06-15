@@ -28,16 +28,11 @@ class DatabaseService {
         .set({'activity': 'dummy'}); */
   }
 
-  // get map of workouts stream
-  Stream<Map<String, List<Workout>>> get userWorkoutMap {
-    return userCollection.doc(uid).snapshots().map(_userWorkoutsFromDoc);
-  }
-
   Stream<Map<String, List<Workout>>> get userWorkouts {
     return userCollection.snapshots().map((QuerySnapshot snapshot) {
       List<Workout> workouts = [];
-      List<String> months = [];
-      snapshot.docs.forEach((DocumentSnapshot doc) {
+      dynamic months = [];
+      snapshot.docs.forEach((QueryDocumentSnapshot doc) {
         if (doc.data()['months'] != null) {
           months = doc.data()['months'];
         } else {
@@ -58,45 +53,6 @@ class DatabaseService {
       }
       return map;
     });
-  }
-
-  Stream<List<String>> get userMonths {
-    return userCollection.doc(uid).snapshots().map((DocumentSnapshot snapshot) {
-      print('list here');
-      print(snapshot.data()['months']);
-      return snapshot.data()['months'];
-    });
-  }
-
-  // return a map (month : list of workouts) from a user doc
-  Map<String, List<Workout>> _userWorkoutsFromDoc(DocumentSnapshot snapshot) {
-    Map<String, List<Workout>> workoutMap = {};
-    for (String monthYear in snapshot.data()['months']) {
-      userCollection
-          .doc(uid)
-          .collection(monthYear)
-          .where('activity', isNotEqualTo: 'dummy')
-          .get()
-          .then((QuerySnapshot querysnapshot) {
-        workoutMap[monthYear] = workoutListFromSnapshot(querysnapshot);
-      });
-    }
-    print(snapshot.data()['months']);
-    print('map here');
-    print(workoutMap);
-    return workoutMap;
-  }
-
-  // return a list of workout objects from a snapshot (month collection)
-  List<Workout> workoutListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.docs.map((doc) {
-      return Workout(
-        activity: doc.data()['activity'],
-        start: (doc.data()['start']).toDate(),
-        end: (doc.data()['end']).toDate(),
-        //description: doc.data()['description']
-      );
-    }).toList();
   }
 
   void addNewWorkout(Workout workout) async {
