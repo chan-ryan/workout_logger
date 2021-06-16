@@ -20,12 +20,6 @@ class DatabaseService {
     await userCollection.doc('months').set({
       'months': [currMonthAndYear]
     });
-    /* create subcollection for current month and add a dummy doc/workout
-    await userCollection
-        .doc(uid)
-        .collection(currMonthAndYear)
-        .doc('dummy')
-        .set({'activity': 'dummy'}); */
   }
 
   Stream<Map<String, List<Workout>>> get userWorkouts {

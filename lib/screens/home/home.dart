@@ -12,10 +12,6 @@ import 'package:workout_logger/shared/constants.dart';
 import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
-  final DateTime month;
-
-  Home({this.month});
-
   @override
   _HomeState createState() => _HomeState();
 }
@@ -102,6 +98,47 @@ class _HomeState extends State<Home> {
   void onChangedTab(int index) {
     setState(() {
       this.index = index;
+    });
+  }
+
+  Future<void> newWorkoutForm(BuildContext context) async {
+    return await showDialog(context: context, builder: (context) {
+      String pickedActivity;
+      DateTime pickedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
+      TimeOfDay start;
+      TimeOfDay end;
+      String description = '';
+
+      return AlertDialog(
+        content: Form(child: Column(children: [
+          DropdownButtonFormField(
+            value: pickedActivity ?? 'Pick an activity',
+            items: activities.keys.map((String activity) {
+              return DropdownMenuItem(value: activity, child: Text(activity));
+            }).toList(),
+            onChanged: (val) => setState(() => pickedActivity = val),
+          ),
+          TextButton(
+            child: Text(
+              DateFormat.MMMMEEEEd().format(pickedDate),
+            ),
+            onPressed: () async {
+              DateTime date = await showDatePicker(
+                context: context,
+                firstDate: DateTime(2021, 6),
+                lastDate: DateTime(2021, 12, 31),
+                initialDate: pickedDate
+              );
+              if (date != null) {
+                setState(() {
+                  pickedDate = date;
+                });
+              }
+            },),
+            Row(
+              children: [],
+            )
+        ],)),);
     });
   }
 
