@@ -32,6 +32,7 @@ class _RegisterState extends State<Register> {
             appBar: AppBar(
               centerTitle: true,
               backgroundColor: Colors.transparent,
+              brightness: Brightness.dark,
               elevation: 0.0,
               title: Text('Register'),
             ),

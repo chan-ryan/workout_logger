@@ -30,6 +30,7 @@ class _SignInState extends State<SignIn> {
             appBar: AppBar(
               centerTitle: true,
               backgroundColor: Colors.transparent,
+              brightness: Brightness.dark,
               elevation: 0.0,
               title: Text('Sign In'),
             ),

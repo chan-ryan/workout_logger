@@ -86,7 +86,9 @@ class _HomeState extends State<Home> {
           foregroundColor: Colors.blueAccent,
           backgroundColor: Colors.white,
           child: Icon(Icons.add_rounded),
-          onPressed: () {},
+          onPressed: () async {
+            await showNewWorkoutForm(context);
+          },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         bottomNavigationBar: NavBar(
@@ -101,18 +103,18 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> newWorkoutForm(BuildContext context) async {
+  Future<void> showNewWorkoutForm(BuildContext context) async {
     return await showDialog(context: context, builder: (context) {
       String pickedActivity;
       DateTime pickedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-      TimeOfDay start;
-      TimeOfDay end;
+      TimeOfDay start = TimeOfDay.now();
+      TimeOfDay end = start;
       String description = '';
 
       return AlertDialog(
         content: Form(child: Column(children: [
           DropdownButtonFormField(
-            value: pickedActivity ?? 'Pick an activity',
+            //value: pickedActivity ?? 'Pick an activity',
             items: activities.keys.map((String activity) {
               return DropdownMenuItem(value: activity, child: Text(activity));
             }).toList(),
@@ -136,7 +138,44 @@ class _HomeState extends State<Home> {
               }
             },),
             Row(
-              children: [],
+              children: [
+                TextButton(
+                  child: Text(
+                    start.format(context),
+                  ),
+                  onPressed: () async {
+                    TimeOfDay selectedStart = await showTimePicker(
+                      context: context,
+                      initialTime: start
+                    );
+                    if (selectedStart != null) {
+                      setState(() {
+                        start = selectedStart;
+                      });
+                    }
+                  },),
+                TextButton(
+                  child: Text(
+                    end.format(context),
+                  ),
+                  onPressed: () async {
+                    TimeOfDay selectedEnd = await showTimePicker(
+                      context: context,
+                      initialTime: end
+                    );
+                    if (selectedEnd != null) {
+                      setState(() {
+                        end = selectedEnd;
+                      });
+                    }
+                  },),
+              ],
+            ),
+            TextFormField(
+              decoration: textInputDecoration,
+              onChanged: (val) {
+                setState(() => description = val);
+              }
             )
         ],)),);
     });
