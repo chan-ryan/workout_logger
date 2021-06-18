@@ -7,6 +7,8 @@ InputDecoration textInputDecoration = InputDecoration(
   border: OutlineInputBorder(
       borderSide: BorderSide(color: Colors.grey),
       borderRadius: BorderRadius.circular(10.0)),
+  contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 12.0),
+  isDense: true
 );
 
 Map<String, Activity> activities = {

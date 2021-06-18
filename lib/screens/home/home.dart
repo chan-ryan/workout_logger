@@ -76,7 +76,7 @@ class _HomeState extends State<Home> {
             IconButton(
                 icon: Icon(Icons.exit_to_app_rounded),
                 onPressed: () async {
-                  await _auth.signOut();
+                  await signOutConfirmation(context);
                 })
           ],
         ),
@@ -103,6 +103,26 @@ class _HomeState extends State<Home> {
     });
   }
 
+  Future<void> signOutConfirmation(BuildContext context) async {
+    return await showDialog(context: context, builder: (context) {
+      return AlertDialog(
+        title: Text('Sign out?'),
+        actions: [
+          TextButton(
+            child: Text('Cancel', style: TextStyle(fontSize: 16.0, color: Colors.grey)),
+            onPressed: () {Navigator.of(context).pop();},
+          ),
+          TextButton(
+            child: Text('Sign out', style: TextStyle(fontSize: 16.0,)),
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await _auth.signOut();
+            },)
+        ],
+      );
+    });
+  }
+
   Future<void> showNewWorkoutForm(BuildContext context) async {
     return await showDialog(context: context, builder: (context) {
       String pickedActivity;
@@ -110,16 +130,23 @@ class _HomeState extends State<Home> {
       TimeOfDay start = TimeOfDay.now();
       TimeOfDay end = start;
       String description = '';
-
+      
       return AlertDialog(
-        content: Form(child: Column(children: [
+        title: Text('Add new workout'),
+        content: StatefulBuilder(builder: (context, setState) {
+          return Form(child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
           DropdownButtonFormField(
             //value: pickedActivity ?? 'Pick an activity',
+            hint: Text('Pick an activity'),
             items: activities.keys.map((String activity) {
               return DropdownMenuItem(value: activity, child: Text(activity));
             }).toList(),
             onChanged: (val) => setState(() => pickedActivity = val),
           ),
+          SizedBox(height: 20.0,),
+          Text('Date'),
           TextButton(
             child: Text(
               DateFormat.MMMMEEEEd().format(pickedDate),
@@ -137,23 +164,31 @@ class _HomeState extends State<Home> {
                 });
               }
             },),
+            SizedBox(height: 10.0,),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
-                  child: Text(
-                    start.format(context),
-                  ),
-                  onPressed: () async {
-                    TimeOfDay selectedStart = await showTimePicker(
-                      context: context,
-                      initialTime: start
-                    );
-                    if (selectedStart != null) {
-                      setState(() {
-                        start = selectedStart;
-                      });
-                    }
-                  },),
+                Column(
+                  children: [
+                    Text('Start time'),
+                    TextButton(
+                    child: Text(
+                      start.format(context),
+                    ),
+                    onPressed: () async {
+                      TimeOfDay selectedStart = await showTimePicker(
+                        context: context,
+                        initialTime: start
+                      );
+                      if (selectedStart != null) {
+                        setState(() {
+                          start = selectedStart;
+                        });
+                      }
+                    },),
+                  ]),
+                Column(children: [
+                Text('End time'),
                 TextButton(
                   child: Text(
                     end.format(context),
@@ -168,16 +203,18 @@ class _HomeState extends State<Home> {
                         end = selectedEnd;
                       });
                     }
-                  },),
+                  },)]),
               ],
             ),
             TextFormField(
-              decoration: textInputDecoration,
+              //decoration: textInputDecoration,
+              decoration: InputDecoration(hintText: 'Description'),
               onChanged: (val) {
                 setState(() => description = val);
               }
             )
-        ],)),);
+        ],));
+        },));
     });
   }
 
