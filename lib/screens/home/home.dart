@@ -16,13 +16,6 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-Workout workoutExample = Workout(
-  activity: "Basketball",
-  start: DateTime(2021, 4, 20, 6, 15),
-  end: DateTime(2021, 4, 20, 8),
-  /*description: 'leg day'*/
-);
-
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
 
@@ -87,7 +80,7 @@ class _HomeState extends State<Home> {
           backgroundColor: Colors.white,
           child: Icon(Icons.add_rounded),
           onPressed: () async {
-            await showNewWorkoutForm(context);
+            await newWorkoutForm(context, user.uid);
           },
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -123,18 +116,19 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> showNewWorkoutForm(BuildContext context) async {
+  Future<void> newWorkoutForm(BuildContext context, String uid) async {
     return await showDialog(context: context, builder: (context) {
       String pickedActivity;
       DateTime pickedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-      TimeOfDay start = TimeOfDay.now();
-      TimeOfDay end = start;
+      TimeOfDay startTime = TimeOfDay.now();
+      TimeOfDay endTime = startTime;
       String description = '';
-      
-      return AlertDialog(
-        title: Text('Add new workout'),
-        content: StatefulBuilder(builder: (context, setState) {
-          return Form(child: Column(
+      String error = '';
+
+      return StatefulBuilder(builder: (context, setState) {
+        return AlertDialog(
+          title: Text('Add new workout'),
+          content: Form(child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
           DropdownButtonFormField(
@@ -170,37 +164,38 @@ class _HomeState extends State<Home> {
               children: [
                 Column(
                   children: [
-                    Text('Start time'),
+                    Text('Start'),
                     TextButton(
                     child: Text(
-                      start.format(context),
+                      startTime.format(context),
                     ),
                     onPressed: () async {
                       TimeOfDay selectedStart = await showTimePicker(
                         context: context,
-                        initialTime: start
+                        initialTime: startTime
                       );
                       if (selectedStart != null) {
                         setState(() {
-                          start = selectedStart;
+                          startTime = selectedStart;
                         });
                       }
                     },),
                   ]),
+                SizedBox(width: 20.0),
                 Column(children: [
-                Text('End time'),
+                Text('End'),
                 TextButton(
                   child: Text(
-                    end.format(context),
+                    endTime.format(context),
                   ),
                   onPressed: () async {
                     TimeOfDay selectedEnd = await showTimePicker(
                       context: context,
-                      initialTime: end
+                      initialTime: endTime
                     );
                     if (selectedEnd != null) {
                       setState(() {
-                        end = selectedEnd;
+                        endTime = selectedEnd;
                       });
                     }
                   },)]),
@@ -212,9 +207,40 @@ class _HomeState extends State<Home> {
               onChanged: (val) {
                 setState(() => description = val);
               }
-            )
-        ],));
-        },));
+            ),
+            SizedBox(height: 10),
+            Text(error, style: TextStyle(color: Colors.red)),
+        ],)),
+        actions: [
+          TextButton(
+            child: Text('Cancel', style: TextStyle(fontSize: 16.0, color: Colors.grey)),
+            onPressed: () {Navigator.of(context).pop();},
+          ),
+          TextButton(
+            child: Text('Confirm', style: TextStyle(fontSize: 16.0)),
+            onPressed: () {
+              print(pickedActivity);
+              if (pickedActivity == null) {
+                setState(() {
+                  error = 'You must pick an activity';
+                });
+                return;
+              }
+              DateTime start = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, startTime.hour, startTime.minute);
+              DateTime end = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, endTime.hour, endTime.minute);
+              if (!end.isAfter(start)) {
+                setState(() {
+                  error = 'End time must be after start time';
+                });
+                return;
+              }
+              //DatabaseService(uid).addNewWorkout(Workout(activity: pickedActivity, start: start, end: end, description: description));
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+        );
+      });
     });
   }
 

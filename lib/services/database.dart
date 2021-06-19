@@ -49,7 +49,7 @@ class DatabaseService {
     });
   }
 
-  void addNewWorkout(Workout workout) async {
+  Future<void> addNewWorkout(Workout workout) async {
     updateMonths(workout.start);
     String monthAndYear = DateFormat.yMMM().format(workout.start);
     String originalDocName = workout.start.toString();
@@ -89,7 +89,7 @@ class DatabaseService {
   }
 
   // update months list according to the given DateTime
-  void updateMonths(DateTime time) async {
+  Future<void> updateMonths(DateTime time) async {
     List<String> months =
         await userCollection.doc(uid).get().then((DocumentSnapshot snapshot) {
       return snapshot.data()['months'];
