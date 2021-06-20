@@ -218,7 +218,7 @@ class _HomeState extends State<Home> {
           ),
           TextButton(
             child: Text('Confirm', style: TextStyle(fontSize: 16.0)),
-            onPressed: () {
+            onPressed: () async {
               print(pickedActivity);
               if (pickedActivity == null) {
                 setState(() {
@@ -234,7 +234,13 @@ class _HomeState extends State<Home> {
                 });
                 return;
               }
-              //DatabaseService(uid).addNewWorkout(Workout(activity: pickedActivity, start: start, end: end, description: description));
+              await DatabaseService(uid).addNewWorkout(
+                Workout(
+                  activity: pickedActivity, 
+                  start: start, 
+                  end: end, 
+                  description: description
+                ));
               Navigator.of(context).pop();
             },
           ),

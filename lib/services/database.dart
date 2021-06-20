@@ -51,19 +51,9 @@ class DatabaseService {
 
   Future<void> addNewWorkout(Workout workout) async {
     updateMonths(workout.start);
-    String monthAndYear = DateFormat.yMMM().format(workout.start);
-    String originalDocName = workout.start.toString();
-    String docName = originalDocName;
-    int count = 1;
-    bool exists = await checkExists(docName);
-    while (exists) {
-      docName = originalDocName + ' (' + count.toString() + ')';
-      count += 1;
-      exists = await checkExists(docName);
-    }
+    String docName = workout.start.toString();
+    
     await userCollection.doc(docName)
-        //.collection(monthAndYear)
-        //.doc(workout.start.toString())
         .set({
       'date': DateFormat.yMd().format(workout.start),
       'activity': workout.activity,
@@ -73,48 +63,48 @@ class DatabaseService {
     });
   }
 
-  Future<bool> checkExists(String docName) async {
-    try {
-      bool exists = false;
-      await userCollection.doc(docName).get().then((doc) {
-        if (doc.exists)
-          exists = true;
-        else
-          exists = false;
-      });
-      return exists;
-    } catch (e) {
-      return false;
+  Future<void> updateMonths(DateTime time) async {
+    if (time.isAfter(DateTime.now())) {
+      await updateFutureMonths(time);
+    } else {
+      await updatePastMonths(time);
     }
   }
 
-  // update months list according to the given DateTime
-  Future<void> updateMonths(DateTime time) async {
-    List<String> months =
-        await userCollection.doc(uid).get().then((DocumentSnapshot snapshot) {
+  Future<void> updatePastMonths(DateTime time) async {
+    dynamic months =
+        await userCollection.doc('months').get().then((DocumentSnapshot snapshot) {
       return snapshot.data()['months'];
     });
-    List<String> newMonths = [];
+    List<String> pastMonths = [];
     DateTime currTime = time;
     while (!months.contains(DateFormat.yMMM().format(currTime))) {
-      newMonths.insert(0, DateFormat.yMMM().format(currTime));
+      pastMonths.add(DateFormat.yMMM().format(currTime));
+      if (currTime.month == 12) {
+        currTime = DateTime(currTime.year + 1, 1);
+      } else {
+        currTime = DateTime(currTime.year, currTime.month + 1);
+      }
+    }
+    userCollection.doc('months').set({'months': pastMonths + months});
+  }
+
+  // update months list according to the given DateTime
+  Future<void> updateFutureMonths(DateTime time) async {
+    dynamic months =
+        await userCollection.doc('months').get().then((DocumentSnapshot snapshot) {
+      return snapshot.data()['months'];
+    });
+    List<String> futureMonths = [];
+    DateTime currTime = time;
+    while (!months.contains(DateFormat.yMMM().format(currTime))) {
+      futureMonths.insert(0, DateFormat.yMMM().format(currTime));
       if (currTime.month == 1) {
         currTime = DateTime(currTime.year - 1, 12);
       } else {
         currTime = DateTime(currTime.year, currTime.month - 1);
       }
     }
-
-    //update months list
-    userCollection.doc(uid).set({'months': months + newMonths});
-
-    //create new subcollections for added months
-    for (String monthAndYear in newMonths) {
-      userCollection
-          .doc(uid)
-          .collection(monthAndYear)
-          .doc('dummy')
-          .set({'activity': 'dummy'});
-    }
+    userCollection.doc('months').set({'months': months + futureMonths});
   }
 }
