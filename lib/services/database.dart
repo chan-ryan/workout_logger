@@ -78,15 +78,17 @@ class DatabaseService {
     });
     List<String> pastMonths = [];
     DateTime currTime = time;
-    while (!months.contains(DateFormat.yMMM().format(currTime))) {
-      pastMonths.add(DateFormat.yMMM().format(currTime));
-      if (currTime.month == 12) {
-        currTime = DateTime(currTime.year + 1, 1);
-      } else {
-        currTime = DateTime(currTime.year, currTime.month + 1);
+    if (!months.contains(DateFormat.yMMM().format(currTime))) {
+      while (!months.contains(DateFormat.yMMM().format(currTime))) {
+        pastMonths.add(DateFormat.yMMM().format(currTime));
+        if (currTime.month == 12) {
+          currTime = DateTime(currTime.year + 1, 1);
+        } else {
+          currTime = DateTime(currTime.year, currTime.month + 1);
+        }
       }
+      userCollection.doc('months').set({'months': pastMonths + months});
     }
-    userCollection.doc('months').set({'months': pastMonths + months});
   }
 
   // update months list according to the given DateTime
@@ -97,14 +99,16 @@ class DatabaseService {
     });
     List<String> futureMonths = [];
     DateTime currTime = time;
-    while (!months.contains(DateFormat.yMMM().format(currTime))) {
-      futureMonths.insert(0, DateFormat.yMMM().format(currTime));
-      if (currTime.month == 1) {
-        currTime = DateTime(currTime.year - 1, 12);
-      } else {
-        currTime = DateTime(currTime.year, currTime.month - 1);
+    if (!months.contains(DateFormat.yMMM().format(currTime))) {
+      while (!months.contains(DateFormat.yMMM().format(currTime))) {
+        futureMonths.insert(0, DateFormat.yMMM().format(currTime));
+        if (currTime.month == 1) {
+          currTime = DateTime(currTime.year - 1, 12);
+        } else {
+          currTime = DateTime(currTime.year, currTime.month - 1);
+        }
       }
+      userCollection.doc('months').set({'months': months + futureMonths});
     }
-    userCollection.doc('months').set({'months': months + futureMonths});
   }
 }
