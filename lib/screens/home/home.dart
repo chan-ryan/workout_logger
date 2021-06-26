@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:workout_logger/services/auth.dart';
 import 'package:workout_logger/shared/loading.dart';
 import 'package:workout_logger/widgets/navbar.dart';
@@ -46,7 +47,7 @@ class _HomeState extends State<Home> {
                 disabledColor: Colors.grey[600],
                 onPressed: !userWorkouts.containsKey(
                       DateFormat.yMMM().format(prevMonth(month))) ? null : () {
-                        setState(() {month = prevMonth(month);});
+                        setMonth(prevMonth(month));
                       },
               ),
               TextButton(
@@ -60,7 +61,7 @@ class _HomeState extends State<Home> {
                 disabledColor: Colors.grey[600],
                 onPressed: !userWorkouts.containsKey(
                       DateFormat.yMMM().format(nextMonth(month))) ? null : () {
-                        setState(() {month = nextMonth(month);});
+                        setMonth(nextMonth(month));
                       },
               )
             ],
@@ -75,19 +76,31 @@ class _HomeState extends State<Home> {
         ),
         backgroundColor: Colors.black,
         body: userWorkouts[DateFormat.yMMM().format(month)] == null ? Loading() : CardView(workouts: userWorkouts[DateFormat.yMMM().format(month)]),
-        floatingActionButton: FloatingActionButton(
-          foregroundColor: Colors.blueAccent,
-          backgroundColor: Colors.white,
-          child: Icon(Icons.add_rounded),
-          onPressed: () async {
-            await newWorkoutForm(context, user.uid);
-          },
+        floatingActionButton: Container(
+          height: 75.0,
+          width: 75.0,
+          child: FittedBox(
+            child: FloatingActionButton(
+              foregroundColor: Colors.blueAccent,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.add_rounded),
+              onPressed: () async {
+                await newWorkoutForm(context, user.uid);
+              },
+            ),
+          ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        /*floatingActionButtonLocation: FloatingActionButtonLocation.,
         bottomNavigationBar: NavBar(
           index: index,
           onChangedTab: onChangedTab,
-        ));
+        )*/);
+  }
+
+  void setMonth(DateTime time) {
+    setState(() {
+      this.month = time;
+    });
   }
 
   void onChangedTab(int index) {
@@ -128,89 +141,91 @@ class _HomeState extends State<Home> {
       return StatefulBuilder(builder: (context, setState) {
         return AlertDialog(
           title: Text('Add new workout'),
-          content: Form(child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-          DropdownButtonFormField(
-            //value: pickedActivity ?? 'Pick an activity',
-            hint: Text('Pick an activity'),
-            items: activities.keys.map((String activity) {
-              return DropdownMenuItem(value: activity, child: Text(activity));
-            }).toList(),
-            onChanged: (val) => setState(() => pickedActivity = val),
-          ),
-          SizedBox(height: 20.0,),
-          Text('Date'),
-          TextButton(
-            child: Text(
-              DateFormat.MMMMEEEEd().format(pickedDate),
+          content: SingleChildScrollView(
+            child: Form(child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+            DropdownButtonFormField(
+              //value: pickedActivity ?? 'Pick an activity',
+              hint: Text('Pick an activity'),
+              items: activities.keys.map((String activity) {
+                return DropdownMenuItem(value: activity, child: Text(activity));
+              }).toList(),
+              onChanged: (val) => setState(() => pickedActivity = val),
             ),
-            onPressed: () async {
-              DateTime date = await showDatePicker(
-                context: context,
-                firstDate: DateTime(2021, 6),
-                lastDate: DateTime(2021, 12, 31),
-                initialDate: pickedDate
-              );
-              if (date != null) {
-                setState(() {
-                  pickedDate = date;
-                });
-              }
-            },),
-            SizedBox(height: 10.0,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Text('Start'),
-                    TextButton(
+            SizedBox(height: 20.0,),
+            Text('Date'),
+            TextButton(
+              child: Text(
+                DateFormat.MMMMEEEEd().format(pickedDate),
+              ),
+              onPressed: () async {
+                DateTime date = await showDatePicker(
+                  context: context,
+                  firstDate: DateTime(2021, 5),
+                  lastDate: DateTime(2021, 12, 31),
+                  initialDate: pickedDate
+                );
+                if (date != null) {
+                  setState(() {
+                    pickedDate = date;
+                  });
+                }
+              },),
+              SizedBox(height: 10.0,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Text('Start'),
+                      TextButton(
+                      child: Text(
+                        startTime.format(context),
+                      ),
+                      onPressed: () async {
+                        TimeOfDay selectedStart = await showTimePicker(
+                          context: context,
+                          initialTime: startTime
+                        );
+                        if (selectedStart != null) {
+                          setState(() {
+                            startTime = selectedStart;
+                          });
+                        }
+                      },),
+                    ]),
+                  SizedBox(width: 20.0),
+                  Column(children: [
+                  Text('End'),
+                  TextButton(
                     child: Text(
-                      startTime.format(context),
+                      endTime.format(context),
                     ),
                     onPressed: () async {
-                      TimeOfDay selectedStart = await showTimePicker(
+                      TimeOfDay selectedEnd = await showTimePicker(
                         context: context,
-                        initialTime: startTime
+                        initialTime: endTime
                       );
-                      if (selectedStart != null) {
+                      if (selectedEnd != null) {
                         setState(() {
-                          startTime = selectedStart;
+                          endTime = selectedEnd;
                         });
                       }
-                    },),
-                  ]),
-                SizedBox(width: 20.0),
-                Column(children: [
-                Text('End'),
-                TextButton(
-                  child: Text(
-                    endTime.format(context),
-                  ),
-                  onPressed: () async {
-                    TimeOfDay selectedEnd = await showTimePicker(
-                      context: context,
-                      initialTime: endTime
-                    );
-                    if (selectedEnd != null) {
-                      setState(() {
-                        endTime = selectedEnd;
-                      });
-                    }
-                  },)]),
-              ],
-            ),
-            TextFormField(
-              //decoration: textInputDecoration,
-              decoration: InputDecoration(hintText: 'Description'),
-              onChanged: (val) {
-                setState(() => description = val);
-              }
-            ),
-            SizedBox(height: 10),
-            Text(error, style: TextStyle(color: Colors.red)),
-        ],)),
+                    },)]),
+                ],
+              ),
+              TextFormField(
+                //decoration: textInputDecoration,
+                decoration: InputDecoration(hintText: 'Description'),
+                onChanged: (val) {
+                  setState(() => description = val);
+                }
+              ),
+              SizedBox(height: 10),
+              Text(error, style: TextStyle(color: Colors.red)),
+                  ],)),
+          ),
         actions: [
           TextButton(
             child: Text('Cancel', style: TextStyle(fontSize: 16.0, color: Colors.grey)),
@@ -242,6 +257,7 @@ class _HomeState extends State<Home> {
                   description: description
                 ));
               Navigator.of(context).pop();
+              setMonth(start);
             },
           ),
         ],

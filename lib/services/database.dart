@@ -34,7 +34,7 @@ class DatabaseService {
             activity: doc.data()['activity'],
             start: (doc.data()['start']).toDate(),
             end: (doc.data()['end']).toDate(),
-            //description: doc.data()['description']
+            description: doc.data()['description']
           ));
         }
       });
@@ -63,6 +63,12 @@ class DatabaseService {
     });
   }
 
+  Future<void> deleteWorkout(Workout workout) async {
+    String docName = workout.start.toString();
+
+    await userCollection.doc(docName).delete();
+  }
+
   Future<void> updateMonths(DateTime time) async {
     if (time.isAfter(DateTime.now())) {
       await updateFutureMonths(time);
@@ -87,7 +93,7 @@ class DatabaseService {
           currTime = DateTime(currTime.year, currTime.month + 1);
         }
       }
-      userCollection.doc('months').set({'months': pastMonths + months});
+      userCollection.doc('months').set({'months': months + pastMonths});
     }
   }
 
