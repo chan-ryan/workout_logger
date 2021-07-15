@@ -28,7 +28,7 @@ class WorkoutTile extends StatelessWidget {
         DateFormat.jm().format(workout.end);
 
     return Card(
-        margin: EdgeInsets.fromLTRB(12.0, 12.0, 12.0, 0),
+        margin: EdgeInsets.fromLTRB(8.0, 12.0, 8.0, 0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
         color: Colors.grey[850],
         child: ListTile(
